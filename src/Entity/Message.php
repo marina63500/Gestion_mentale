@@ -29,6 +29,8 @@ class Message
     #[ORM\ManyToOne(inversedBy: 'messages')]
     private ?Dossier $dossier = null;
 
+   
+
     public function getId(): ?int
     {
         return $this->id;
