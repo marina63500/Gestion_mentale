@@ -73,8 +73,8 @@ final class MessageController extends AbstractController
         return $this->json($data, Response::HTTP_OK);
     }
 
-   // créer un message
-         #[Route('/message/add', name: 'add_message', methods: ['POST'])]
+    // créer un message
+    #[Route('/message/add', name: 'add_message', methods: ['POST'])]
     public function addMessage(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -106,42 +106,6 @@ final class MessageController extends AbstractController
         return $this->json(['message' => 'Message envoyé avec succès'], Response::HTTP_CREATED);
     }
 
-
-
-
-    // modifier,mettre à jour un message
-    #[Route('/message/edit/{id}', name: 'update_message', methods: ['PUT'])]
-    public function updateMessage($id, Request $request, MessageRepository $messageRepository, EntityManagerInterface $entityManager): JsonResponse
-    {
-        $message = $messageRepository->find($id);
-
-        if (!$message) {
-            return $this->json(['message' => 'Message not found'], Response::HTTP_NOT_FOUND);
-        }
-
-        $data = json_decode($request->getContent(), true);
-
-        if (isset($data['object'])) {
-            $message->setObject($data['object']);
-        }
-        if (isset($data['content'])) {
-            $message->setContent($data['content']);
-        }
-
-        $entityManager->persist($message);
-        $entityManager->flush();
-
-        return $this->json([
-            'id' => $message->getId(),
-            'object' => $message->getObject(),
-            'content' => $message->getContent(),
-            'createdAt' => $message->getCreatedAt()->format('Y-m-d H:i:s'),
-            // 'user' => [
-            //     'id' => $message->getUser()->getId(),
-            //     'last_name' => $message->getUser()->getLastName(),
-            //     'first_name' => $message->getUser()->getFirstName()],
-        ], Response::HTTP_OK);
-    }
 
     // supprimer un message
     #[Route('/message/delete/{id}', name: 'delete_message', methods: ['DELETE'])]
