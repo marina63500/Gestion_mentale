@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2c36dc6affb9ff05242c70c0602d4ac4",
+    "content-hash": "934a64a47c58b8a74bcd6768292560ee",
     "packages": [
         {
             "name": "composer/semver",
@@ -1475,7 +1475,6 @@
             "time": "2025-03-24T10:02:05+00:00"
         },
         {
-<<<<<<< HEAD
             "name": "nelmio/cors-bundle",
             "version": "2.5.0",
             "source": {
@@ -1538,8 +1537,6 @@
             "time": "2024-06-24T21:25:28+00:00"
         },
         {
-=======
->>>>>>> de8e368c81fbbd1f6952bd81e6fa00c2922b7966
             "name": "phpdocumentor/reflection-common",
             "version": "2.2.0",
             "source": {

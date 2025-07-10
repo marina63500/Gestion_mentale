@@ -2,17 +2,19 @@
 
 namespace App\Controller;
 
-use App\Entity\Message;
-use App\Repository\DossierRepository;
 use DateTime;
-use App\Repository\MessageRepository;
+use App\Entity\User;
+use App\Entity\Dossier;
+use App\Entity\Message;
 use App\Repository\UserRepository;
+use App\Repository\DossierRepository;
+use App\Repository\MessageRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/api')]
 final class MessageController extends AbstractController
@@ -71,28 +73,41 @@ final class MessageController extends AbstractController
         return $this->json($data, Response::HTTP_OK);
     }
 
-    // créer un message
-    //   #[Route('/message/add', name: 'add_message', methods: ['POST'])]
-    // public function addMessage(Request $request,EntityManagerInterface $entityManager): JsonResponse
-    // {
-    //     $data = json_decode($request->getContent(), true);    //json_decode sert à convertir du JSON en tableau PHP ou en objet.
-    //                                                           //true signifie : convertir en tableau associatif PHP, pas en objet.
-    //     if (!isset($data['object']) || !isset($data['content']) ) {
-    //         return $this->json(['message' => 'Invalid data'], Response::HTTP_BAD_REQUEST);
-    //     } 
+   // créer un message
+         #[Route('/message/add', name: 'add_message', methods: ['POST'])]
+    public function addMessage(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
 
-    //     $message = new Message();
-    //     $message->setObject($data['object']);
-    //     $message->setContent($data['content']);
-    //     $message->setCreatedAt(new DateTime());
-    //     $message->setUser($this->getUser());// si user connecté
+        if (!isset($data['object'], $data['content'], $data['dossier_id'], $data['user_id'])) {
+            return $this->json(['message' => 'Données manquantes'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $user = $entityManager->getRepository(User::class)->find($data['user_id']);
+        if (!$user) {
+            return $this->json(['message' => 'Utilisateur introuvable'], Response::HTTP_NOT_FOUND);
+        }
+
+        $dossier = $entityManager->getRepository(Dossier::class)->find($data['dossier_id']);
+        if (!$dossier) {
+            return $this->json(['message' => 'Dossier introuvable'], Response::HTTP_NOT_FOUND);
+        }
+
+        $message = new Message();
+        $message->setObject($data['object']);
+        $message->setContent($data['content']);
+        $message->setCreatedAt(new \DateTime());
+        $message->setUser($user);
+        $message->setDossier($dossier);
+
+        $entityManager->persist($message);
+        $entityManager->flush();
+
+        return $this->json(['message' => 'Message envoyé avec succès'], Response::HTTP_CREATED);
+    }
 
 
-    //     $entityManager->persist($message);
-    //     $entityManager->flush();    
 
-    //     return $this->json(['message' => 'Message envoyé'], Response::HTTP_CREATED);
-    // } 
 
     // modifier,mettre à jour un message
     #[Route('/message/edit/{id}', name: 'update_message', methods: ['PUT'])]
