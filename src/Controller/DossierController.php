@@ -10,11 +10,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('dossiers')]
+#[Route('/api')]
 class DossierController extends AbstractController
 {
     // GET pour afficher tout les dossier
-    #[Route('', name: 'api_dossier_index', methods: ['GET'])]
+    #[Route('/dossiers', name: 'api_dossier_index', methods: ['GET'])]
     public function index(DossierRepository $repo): JsonResponse
     {
         $dossiers = $repo->findAll();
@@ -33,7 +33,7 @@ class DossierController extends AbstractController
     }
 
     // GET  pour Afficher un seul dossier
-    #[Route('/{id}', name: 'api_dossier_show', methods: ['GET'])]
+    #[Route('/dossiers/{id}', name: 'api_dossier_show', methods: ['GET'])]
     public function show(Dossier $dossier): JsonResponse
     {
         $data = [
@@ -48,7 +48,7 @@ class DossierController extends AbstractController
     }
 
     // POST - Créer un nouveau dossier
-    #[Route('/add', name: 'api_dossier_create', methods: ['POST'])]
+    #[Route('/dossiers/add', name: 'api_dossier_create', methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $em): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -69,7 +69,7 @@ class DossierController extends AbstractController
     }
 
     // PUT - Modifier un dossier
-    #[Route('/edit/{id}', name: 'api_dossier_update', methods: ['PUT'])]
+    #[Route('/dossiers/edit/{id}', name: 'api_dossier_update', methods: ['PUT'])]
     public function update(Request $request, Dossier $dossier, EntityManagerInterface $em): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -87,7 +87,7 @@ class DossierController extends AbstractController
     }
 
     // DELETE - Supprimer un dossier
-    #[Route('/{id}', name: 'api_dossier_delete', methods: ['DELETE'])]
+    #[Route('/dossiers/{id}', name: 'api_dossier_delete', methods: ['DELETE'])]
     public function delete(Dossier $dossier, EntityManagerInterface $em): JsonResponse
     {
         $em->remove($dossier);

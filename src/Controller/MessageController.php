@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/api')]
 final class MessageController extends AbstractController
 {
 
@@ -22,7 +23,7 @@ final class MessageController extends AbstractController
     public function index(MessageRepository $messageRepository,): JsonResponse
     {
         $messages = $messageRepository->findAll();
-    
+
 
         $data = [];
         foreach ($messages as $message) {
@@ -34,19 +35,20 @@ final class MessageController extends AbstractController
                 'user' => [
                     'id' => $message->getUser()->getId(),
                     'last_name' => $message->getUser()->getLastname(),
-                    'first_name' => $message->getUser()->getFirstname()],       
+                    'first_name' => $message->getUser()->getFirstname()
+                ],
 
-                   
-                ];
-//est ce que j inclus le dossier ici?            
-            }      
-            return $this->json($data, Response::HTTP_OK);        
+
+            ];
+            //est ce que j inclus le dossier ici?            
+        }
+        return $this->json($data, Response::HTTP_OK);
     }
 
 
     //voir un message
-     #[Route('/message/{id}', name: 'show_message', methods: ['GET'])]
-    public function showMessage($id,MessageRepository $messageRepository): JsonResponse
+    #[Route('/message/{id}', name: 'show_message', methods: ['GET'])]
+    public function showMessage($id, MessageRepository $messageRepository): JsonResponse
     {
         $messages = $messageRepository->find($id);
 
@@ -62,11 +64,12 @@ final class MessageController extends AbstractController
             'user' => [
                 'id' => $messages->getUser()->getId(),
                 'last_name' => $messages->getUser()->getLastName(),
-                'first_name' => $messages->getUser()->getFirstName()],
+                'first_name' => $messages->getUser()->getFirstName()
+            ],
         ];
-        
-            return $this->json($data, Response::HTTP_OK);
-    } 
+
+        return $this->json($data, Response::HTTP_OK);
+    }
 
     // créer un message
     //   #[Route('/message/add', name: 'add_message', methods: ['POST'])]
@@ -77,13 +80,13 @@ final class MessageController extends AbstractController
     //     if (!isset($data['object']) || !isset($data['content']) ) {
     //         return $this->json(['message' => 'Invalid data'], Response::HTTP_BAD_REQUEST);
     //     } 
-        
+
     //     $message = new Message();
     //     $message->setObject($data['object']);
     //     $message->setContent($data['content']);
     //     $message->setCreatedAt(new DateTime());
     //     $message->setUser($this->getUser());// si user connecté
-        
+
 
     //     $entityManager->persist($message);
     //     $entityManager->flush();    
@@ -92,8 +95,8 @@ final class MessageController extends AbstractController
     // } 
 
     // modifier,mettre à jour un message
-     #[Route('/message/edit/{id}', name: 'update_message', methods: ['PUT'])]
-    public function updateMessage($id,Request $request,MessageRepository $messageRepository,EntityManagerInterface $entityManager): JsonResponse
+    #[Route('/message/edit/{id}', name: 'update_message', methods: ['PUT'])]
+    public function updateMessage($id, Request $request, MessageRepository $messageRepository, EntityManagerInterface $entityManager): JsonResponse
     {
         $message = $messageRepository->find($id);
 
@@ -123,10 +126,10 @@ final class MessageController extends AbstractController
             //     'last_name' => $message->getUser()->getLastName(),
             //     'first_name' => $message->getUser()->getFirstName()],
         ], Response::HTTP_OK);
-    } 
+    }
 
     // supprimer un message
-     #[Route('/message/delete/{id}', name: 'delete_message', methods: ['DELETE'])]
+    #[Route('/message/delete/{id}', name: 'delete_message', methods: ['DELETE'])]
     public function deleteMessage($id, MessageRepository $messageRepository, EntityManagerInterface $entityManager): JsonResponse
     {
         $message = $messageRepository->find($id);
